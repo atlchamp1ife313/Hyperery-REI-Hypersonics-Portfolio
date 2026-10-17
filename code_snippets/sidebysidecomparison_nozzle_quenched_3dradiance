@@ -1,0 +1,36 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Load the coupled kinetics dataset
+df = pd.read_csv('dual_track_coupled_kinetics_output.csv')
+
+# Initialize side-by-side 3D figure
+fig = plt.figure(figsize=(16, 7))
+
+x = df['Downrange_km']
+y = df['Altitude_km']
+
+# --- Left Plot: Baseline Nozzle ---
+ax1 = fig.add_subplot(121, projection='3d')
+z_base = df['TrackB_Baseline_Radiance_W_sr_m2']
+sc1 = ax1.scatter(x, y, z_base, c=z_base, cmap='inferno', s=50, depthshade=True)
+ax1.set_xlabel('Downrange Distance (km)', labelpad=8)
+ax1.set_ylabel('Altitude (km)', labelpad=8)
+ax1.set_zlabel('Radiance (W/sr*m^2)', labelpad=8)
+ax1.set_title('Baseline Nozzle: 3D Radiance Profile', fontsize=12, pad=10)
+
+# --- Right Plot: Modified / Quenched Nozzle ---
+ax2 = fig.add_subplot(122, projection='3d')
+z_quench = df['TrackB_Quenched_Radiance_W_sr_m2']
+sc2 = ax2.scatter(x, y, z_quench, c=z_quench, cmap='viridis', s=50, depthshade=True)
+ax2.set_xlabel('Downrange Distance (km)', labelpad=8)
+ax2.set_ylabel('Altitude (km)', labelpad=8)
+ax2.set_zlabel('Radiance (W/sr*m^2)', labelpad=8)
+ax2.set_title('Modified / Quenched Nozzle: 3D Radiance Profile', fontsize=12, pad=10)
+
+# Finalize Layout and Export
+plt.tight_layout()
+plt.savefig('side_by_side_3d_plume.png', dpi=300, bbox_inches='tight')
+plt.show()
+print("📁 Saved side-by-side 3D visualization as: side_by_side_3d_plume.png")
